@@ -22,7 +22,13 @@ export default function ListingDetail({
   onClose: () => void;
 }) {
   const { listing, cost, eligibility, strategy } = card;
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
+  const FREQ_LABEL: Record<string, string> = {
+    monthly: t("costFreqMonthly"),
+    "one-time": t("costFreqOneTime"),
+    "per year": t("costFreqPerYear"),
+    "at each renewal": t("costFreqRenewal"),
+  };
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
   const [askLoading, setAskLoading] = useState(false);
@@ -37,7 +43,7 @@ export default function ListingDetail({
       const a = await askFollowup(listing.id, question.trim(), lang);
       setAnswer(a);
     } catch (e) {
-      setAnswer("Sorry, that request failed. Please try again.");
+      setAnswer(t("askFailed"));
     } finally {
       setAskLoading(false);
     }
@@ -79,54 +85,70 @@ export default function ListingDetail({
                 rel="noopener noreferrer"
                 className="text-xs underline text-ink/70 dark:text-ink-dark/70 hover:text-signal"
               >
-                View original listing / 元の掲載を見る ↗
+                {t("viewOriginalListing")} ↗
               </a>
             )}
           </div>
           <button onClick={onClose} className="text-sm px-2 py-1 border border-rule dark:border-rule-dark rounded">
-            Close / 閉じる
+            {t("close")}
           </button>
         </div>
 
         {cost && (
           <section className="card p-4">
-            <h3 className="text-sm font-medium mb-2">True cost / 実質費用</h3>
+            <h3 className="text-sm font-medium mb-2">{t("trueCost")}</h3>
             <div className="text-sm space-y-1 tabular-figures">
-              <div>Advertised / 広告家賃: ¥{cost.advertised_monthly_jpy.toLocaleString()}</div>
-              <div>Upfront total / 初期費用合計: ¥{cost.upfront_total_jpy.toLocaleString()}</div>
+              <div>{t("advertised")}: ¥{cost.advertised_monthly_jpy.toLocaleString()}</div>
+              <div>{t("upfrontTotal")}: ¥{cost.upfront_total_jpy.toLocaleString()}</div>
               <div className="text-signal font-semibold">
-                Effective monthly / 実質月額: ¥{cost.effective_monthly_jpy.toLocaleString()} (+
+                {t("effectiveMonthly")}: ¥{cost.effective_monthly_jpy.toLocaleString()} (+
                 {cost.markup_percent.toFixed(0)}%)
               </div>
             </div>
-            {cost.assumptions.length > 0 && (
-              <p className="mt-2 text-[11px] text-ink/50 dark:text-ink-dark/50">
-                Based only on fees this listing actually states — nothing above is estimated. Below:
-                what wasn&apos;t stated, so the real total could be higher.
-                <span className="block">
-                  実際に記載されている費用のみで計算しています（推定なし）。以下は記載がなく、実際の総額はさらに高くなる可能性があります。
-                </span>
-              </p>
+
+            {cost.items.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-xs font-medium mb-1">{t("costBreakdownTitle")}</h4>
+                <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("costBreakdownIntro")}</p>
+                <ul className="text-xs divide-y divide-rule dark:divide-rule-dark">
+                  {cost.items.map((item, i) => (
+                    <li key={i} className="flex items-center justify-between py-1.5 tabular-figures">
+                      <span>{item.label_en}</span>
+                      <span className="flex items-center gap-2">
+                        <span className="text-ink/40 dark:text-ink-dark/40 text-[10px]">
+                          {FREQ_LABEL[item.frequency_en] ?? item.frequency_en}
+                        </span>
+                        <span className="font-medium">¥{item.amount_jpy.toLocaleString()}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
-            <ul className="mt-2 text-xs text-ink/60 dark:text-ink-dark/60 list-disc list-inside space-y-0.5">
-              {cost.assumptions.map((a, i) => (
-                <li key={i}>{a}</li>
-              ))}
-            </ul>
+
+            {cost.assumptions.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-xs font-medium mb-1">{t("costNotStatedTitle")}</h4>
+                <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("costDisclaimer")}</p>
+                <ul className="text-xs text-ink/60 dark:text-ink-dark/60 list-disc list-inside space-y-0.5">
+                  {cost.assumptions.map((a, i) => (
+                    <li key={i}>{a}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </section>
         )}
 
         {eligibility && (
           <section className="card p-4">
-            <h3 className="text-sm font-medium mb-2">Eligibility / 入居条件</h3>
+            <h3 className="text-sm font-medium mb-2">{t("eligibility")}</h3>
             <p className="text-xs italic text-ink/60 dark:text-ink-dark/60 mb-2">
               {eligibility.confidence_note}
             </p>
             <div className="space-y-3">
               {eligibility.findings.length === 0 && (
-                <p className="text-xs text-ink/50 dark:text-ink-dark/50">
-                  No specific conditions could be grounded in the listing's text.
-                </p>
+                <p className="text-xs text-ink/50 dark:text-ink-dark/50">{t("noConditionsFound")}</p>
               )}
               {eligibility.findings.map((f, i) => (
                 <div key={i} className="text-xs border-l-2 border-rule dark:border-rule-dark pl-2">
@@ -150,37 +172,34 @@ export default function ListingDetail({
 
         {strategy && strategy.plan && (
           <section className="card p-4">
-            <h3 className="text-sm font-medium mb-2">🎯 Strategy advisor / 交渉戦略</h3>
-            <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">
-              Not guaranteed — a real starting point for a conversation, not an entitlement.
-              <span className="block">交渉の結果を保証するものではありません。あくまで会話の出発点としてご活用ください。</span>
-            </p>
+            <h3 className="text-sm font-medium mb-2">🎯 {t("strategyAdvisorTitle")}</h3>
+            <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("strategyDisclaimer")}</p>
             <p className="text-xs whitespace-pre-wrap text-ink/80 dark:text-ink-dark/80">{strategy.plan}</p>
           </section>
         )}
 
         <section className="card p-4">
-          <h3 className="text-sm font-medium mb-2">Ask about this listing</h3>
+          <h3 className="text-sm font-medium mb-2">{t("askAbout")}</h3>
           <div className="flex gap-2">
             <input
               className="input flex-1"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="e.g. Is this pet friendly?"
+              placeholder={t("askPlaceholder")}
               onKeyDown={(e) => e.key === "Enter" && ask()}
             />
             <button className="btn-primary" onClick={ask} disabled={askLoading}>
-              {askLoading ? "…" : "Ask"}
+              {askLoading ? "…" : t("ask")}
             </button>
           </div>
           {answer && <p className="text-xs mt-2 text-ink/70 dark:text-ink-dark/70">{answer}</p>}
         </section>
 
         <section className="card p-4">
-          <h3 className="text-sm font-medium mb-2">Inquiry email / 問い合わせメール</h3>
+          <h3 className="text-sm font-medium mb-2">{t("inquiryEmail")}</h3>
           {!email ? (
             <button className="btn-primary" onClick={draftEmail} disabled={emailLoading}>
-              {emailLoading ? "Drafting…" : "Draft inquiry email"}
+              {emailLoading ? t("drafting") : t("draftEmail")}
             </button>
           ) : (
             <div className="space-y-2 text-xs">
@@ -192,11 +211,11 @@ export default function ListingDetail({
                 onClick={copyEmail}
                 className="text-xs border border-rule dark:border-rule-dark rounded px-3 py-1"
               >
-                {copied ? "Copied!" : "Copy"}
+                {copied ? t("copied") : t("copy")}
               </button>
               <details className="mt-2">
                 <summary className="cursor-pointer text-ink/60 dark:text-ink-dark/60">
-                  English gloss
+                  {t("englishGloss")}
                 </summary>
                 <p className="mt-1 text-ink/70 dark:text-ink-dark/70">{email.body_en_gloss}</p>
               </details>

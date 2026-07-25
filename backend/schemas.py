@@ -63,12 +63,19 @@ class Listing(BaseModel):
     posted_date: Optional[str] = None
 
 
+class CostLineItem(BaseModel):
+    label_en: str
+    amount_jpy: int
+    frequency_en: Literal["monthly", "one-time", "per year", "at each renewal"]
+
+
 class CostBreakdown(BaseModel):
     listing_id: str
     advertised_monthly_jpy: int
     upfront_total_jpy: int
     effective_monthly_jpy: int
     markup_percent: float
+    items: list[CostLineItem] = []
     assumptions: list[str] = []
 
 
