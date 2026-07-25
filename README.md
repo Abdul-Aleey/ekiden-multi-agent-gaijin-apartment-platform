@@ -39,6 +39,8 @@ Vertex AI, running Gemini 3.5 flash, is a universal fallback. Every single agent
 
 Every provider call follows the same pattern. Try the best fit model for the task, fall back to a secondary real model, fall back to Vertex AI, and only as a last resort fall back to deterministic logic such as regex extraction, rule based heuristics, or a fixed template. The product never crashes or blanks out because one provider is down.
 
+A more detailed table of every model, the exact tasks it powers, and the reasoning behind each tier choice is in [PRESENTATION_BRIEF.md](PRESENTATION_BRIEF.md).
+
 ## Honesty by design
 
 Ekiden never fabricates a cost it cannot verify. Any fee not explicitly stated by a listing is excluded from every total and disclosed separately as not stated, rather than filled in with an average guess.
@@ -57,12 +59,16 @@ Ekiden runs as a single Google Cloud Run service. The Next.js frontend is built 
 
 ## Local development
 
-The backend requires Python 3.11. From the backend folder, create a virtual environment, install the packages in requirements.txt, fill in the values described in that folder's environment file, and run uvicorn against main colon app with reload enabled.
+The backend requires Python 3.11. From the backend folder, create a virtual environment, install the packages in requirements.txt, copy .env.example to .env and fill in real values, then run uvicorn main:app with reload enabled.
 
-The frontend requires Node 20. From the frontend folder, run npm install, then npm run dev.
+The frontend requires Node 20. From the frontend folder, copy .env.local.example to .env.local, run npm install, then npm run dev.
 
 ## Project structure
 
 The backend folder contains the FastAPI application, one file per agent under agents, the prompts each agent uses, the provider abstraction that every model call goes through, and the services that talk to live listing sites, the fallback data corpus, and Daytona.
 
 The frontend folder contains the Next.js App Router application, including the chat interface, the shortlist cards, and the listing detail panel.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
