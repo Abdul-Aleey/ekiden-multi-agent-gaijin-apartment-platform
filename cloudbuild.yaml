@@ -1,0 +1,73 @@
+# Deploy: gcloud builds submit --config cloudbuild.yaml .
+#
+# Single Cloud Run service — see Dockerfile for why (static-exported Next.js
+# frontend served by the same FastAPI process as the API).
+#
+# Only NON-secret config is set here (baked into the deploy step, visible in
+# Cloud Build logs). Real secrets (QWEN_API_KEY, AIAND_API_KEY, GMI_API_KEY,
+# DAYTONA_API_KEY) are set once after first deploy via:
+#   gcloud run services update ekiden --region asia-northeast1 \
+#     --set-env-vars QWEN_API_KEY=...,AIAND_API_KEY=...,DAYTONA_API_KEY=...
+# (GMI_API_KEY only once you have one.) See backend/.env for the full list
+# and what each one powers.
+#
+# Vertex AI Gemini fallback needs no secret at all — it runs on Application
+# Default Credentials via the Cloud Run service's own service account. Before
+# first deploy, grant that account the role once:
+#   gcloud projects add-iam-policy-binding $PROJECT_ID \
+#     --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+#     --role="roles/aiplatform.user"
+#
+# --max-instances 1: the session store in backend/main.py (_session_cards) is
+# in-process memory, so this service must stay pinned to a single instance or
+# a follow-up/inquiry request could hit an instance that never ran the
+# original search. Don't raise this without adding a shared session store
+# (Redis/Firestore) first.
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/ekiden:$COMMIT_SHA'
+      - '-f'
+      - 'Dockerfile'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/ekiden:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ekiden'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/ekiden:$COMMIT_SHA'
+      - '--region'
+      - 'asia-northeast1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--min-instances'
+      - '1'
+      - '--max-instances'
+      - '1'
+      - '--timeout'
+      - '300'
+      - '--concurrency'
+      - '5'
+      - '--set-env-vars'
+      # GOOGLE_CLOUD_LOCATION=global (not a region) — gemini-3.x models are
+      # global-only. Unrelated to --region above, which is just where the
+      # Cloud Run container itself runs.
+      - 'GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_LOCATION=global,GEMINI_MODEL=gemini-3.5-flash'
+
+images:
+  - 'gcr.io/$PROJECT_ID/ekiden:$COMMIT_SHA'

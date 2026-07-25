@@ -1,0 +1,27 @@
+# --- secrets ---
+.env
+.env.local
+*.env
+
+# --- backend (Python) ---
+.venv/
+__pycache__/
+*.pyc
+backend/data/listings.sqlite
+backend/data/README.md
+
+# --- frontend (Next.js) ---
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/tsconfig.tsbuildinfo
+
+# --- internal tooling / session notes, not project docs ---
+.claude/
+MEMORY.md
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+*.log

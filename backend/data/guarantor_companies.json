@@ -1,0 +1,82 @@
+[
+  {
+    "name": "全保連株式会社（Zenhoren）",
+    "accepts_foreign_nationals": null,
+    "requires_emergency_contact_in_japan": null,
+    "initial_fee_note": null,
+    "annual_fee_note": "継続保証委託料（renewal guarantee fee）is billed once per year from the guarantee start date, payable by rent-linked account transfer, bank transfer (notified by SMS), or convenience-store payment. The exact amount is not published on the site and is set per contract with the property management company.",
+    "notes": "One of Japan's largest rent-guarantee companies. Its residential plan (家賃保証：居住用) covers rent, common-area fees, parking, and renewal fees during the tenancy, plus move-out restoration costs up to a maximum guarantee of 24 months' rent; offers an electronic contracting option (Z-SIGN) and a Mitsubishi UFJ card payment plan. No statement about foreign-national applicants was found anywhere on zenhoren.jp itself.",
+    "source_url": "https://www.zenhoren.jp/service/rent/residence.html",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "日本セーフティー株式会社（Nihon Safety）",
+    "accepts_foreign_nationals": true,
+    "requires_emergency_contact_in_japan": false,
+    "initial_fee_note": "A one-time guarantee charge (保証料) is collected at contract signing; the site states this charge is not a security deposit and is non-refundable even if the contract is later cancelled. The specific amount/percentage is not published on the site.",
+    "annual_fee_note": "A renewal guarantee fee (更新保証料) is charged each time the one-year guarantee period is renewed for continuing tenancies; the amount is not published on the site and is billed via an invoice/notice sent by Nihon Safety.",
+    "notes": "Nihon Safety runs a dedicated English-language page for non-Japanese residents, stating: \"If you can pay your rent reliably, there are no restrictions on your nationality, age, or vocation.\" Required application documents list a residence card / special permanent resident certificate for ID, and a \"home country emergency contact information form\" — i.e., the emergency contact is expected to be in the applicant's home country, not necessarily in Japan.",
+    "source_url": "https://www.nihon-safety.co.jp/english/",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "株式会社Casa（Casa）",
+    "accepts_foreign_nationals": true,
+    "requires_emergency_contact_in_japan": true,
+    "initial_fee_note": null,
+    "annual_fee_note": "One year after the initial contract, and every year thereafter, an annual guarantee fee (年間保証料) of ¥10,000 is charged.",
+    "notes": "TSE Prime-listed (code 7196), one of Japan's largest guarantor firms with roughly 22,000 partner real-estate offices and reported 92.2% customer satisfaction. FAQ explicitly states foreign nationals may apply (外国籍の方もお申し込みいただけます) with a residence card or passport+visa, but requires the registered emergency contact to be an adult relative (within three degrees of kinship) residing in Japan who can communicate by phone in Japanese. Also runs a 24/7/365 multilingual \"Interpretation Center\" for foreign-resident tenants. Fee figure per casa-inc.co.jp/service/user/guarantee/.",
+    "source_url": "https://casa-inc.co.jp/faq/",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "ジェイリース株式会社（J Lease）",
+    "accepts_foreign_nationals": true,
+    "requires_emergency_contact_in_japan": null,
+    "initial_fee_note": "For the 住宅確保要配慮者プラン (housing-assistance-priority plan): initial guarantee fee equal to 100% of the total monthly rent-equivalent charge (賃料等総額の100%).",
+    "annual_fee_note": "For the same plan: ¥10,000 per year. Other plans (e.g. J-Flat, J-Wing, J-AKINAI) have different fee structures not detailed on this page.",
+    "notes": "TSE Prime-listed (code 7187), registered rent-debt guarantee business (国土交通大臣（2）第20号). States on its own site that tenants able to pay rent are welcomed \"regardless of nationality\" and that more foreign nationals are moving in as a result. The 住宅確保要配慮者プラン explicitly requires an emergency contact (not limited to relatives; individual or corporate contacts accepted) but does not specify the contact must be based in Japan. Also offers a J-AKINAI plan advertising an industry-leading guarantee cap of 24 months' total rent.",
+    "source_url": "https://www.j-lease.jp/examine/",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "株式会社オリコフォレントインシュア（Orico Forent Insure）",
+    "accepts_foreign_nationals": true,
+    "requires_emergency_contact_in_japan": null,
+    "initial_fee_note": null,
+    "annual_fee_note": null,
+    "notes": "Offers \"住まいるインシュア グローバル\" (Sumairu Insure Global), a dedicated guarantee option for foreign-national tenants with multilingual support in English, Chinese, Korean, Vietnamese, Nepali, Thai, Portuguese, and Spanish. Also offers a smart-meter-based welfare-monitoring service (見守りR) that does not use cameras or sensors. No fee figures or emergency-contact policy are published on the pages reviewed.",
+    "source_url": "https://www.orico-fi.co.jp/company/service/housing/",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "株式会社グローバルトラストネットワークス（GTN / Global Trust Networks）",
+    "accepts_foreign_nationals": true,
+    "requires_emergency_contact_in_japan": null,
+    "initial_fee_note": null,
+    "annual_fee_note": null,
+    "notes": "GTN's rent-guarantee business is built specifically for foreign residents, stating it has \"provided rent guarantee services in partnership with approximately 42,000 real estate companies, focusing on foreigners since our founding,\" and that foreign nationals do not need a co-signer. Multilingual support is included free and unlimited with all guarantee plans, and no Japanese proficiency is required of applicants. No fee figures or emergency-contact policy were disclosed on the pages reviewed.",
+    "source_url": "https://www.gtn.co.jp/business/rent-warranty/",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "エルズサポート株式会社（L's Support）",
+    "accepts_foreign_nationals": null,
+    "requires_emergency_contact_in_japan": null,
+    "initial_fee_note": null,
+    "annual_fee_note": null,
+    "notes": "Part of the Home Net group since August 2010; guarantee platform operates under the \"LACTii\" brand. Runs a dedicated \"外国人コール24\" (Foreigner Call 24) interpretation and daily-life support line for residents, implying a foreign-resident customer base, but no page reviewed contained an explicit statement that foreign nationals are accepted as guarantee applicants, nor any published fee figures or emergency-contact policy.",
+    "source_url": "https://www.ls-support.co.jp/service/",
+    "verified_at": "2026-07-24"
+  },
+  {
+    "name": "日本賃貸保証株式会社（JID）",
+    "accepts_foreign_nationals": true,
+    "requires_emergency_contact_in_japan": null,
+    "initial_fee_note": null,
+    "annual_fee_note": null,
+    "notes": "Established in July 1995 in Kisarazu, Chiba as Japan's first rental-guarantee company. States explicitly that its guarantee service is available regardless of 国籍 (nationality), occupation, gender, or age, positioning itself against traditional discrimination in the guarantor market. Covers residential, commercial, office, and parking-lot contracts (rent above ¥300,000/month requires separate consultation). The site references a \"所定の保証料\" (set guarantee fee) without disclosing amounts, and does not state an emergency-contact location policy.",
+    "source_url": "https://jid-net.co.jp/consumer/concept/",
+    "verified_at": "2026-07-24"
+  }
+]

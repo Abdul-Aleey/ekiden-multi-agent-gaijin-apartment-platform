@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: #FCFBFA;
+  color: #14192A;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0B0D10;
+    color: #E4E7EC;
+  }
+}
+
+.tabular-figures {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(120,120,140,0.08) 25%, rgba(120,120,140,0.18) 37%, rgba(120,120,140,0.08) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+.float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+@layer components {
+  .input {
+    @apply border border-rule dark:border-rule-dark rounded-lg px-3 py-2 bg-white/70 dark:bg-white/[0.04] text-sm
+           transition-colors focus:border-indigo-400 dark:focus:border-indigo-500;
+  }
+  .btn-primary {
+    @apply relative bg-gradient-to-r from-indigo-600 via-violet-600 to-signal text-white rounded-lg px-4 py-2.5 text-sm font-medium
+           shadow-[0_4px_20px_-4px_rgba(79,70,229,0.5)] hover:shadow-[0_8px_28px_-4px_rgba(79,70,229,0.7)]
+           hover:-translate-y-0.5 active:translate-y-0
+           transition-all duration-200 disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0;
+  }
+  .btn-ghost {
+    @apply border border-rule dark:border-rule-dark rounded-lg px-3 py-1.5 text-xs font-medium
+           hover:bg-ink/5 dark:hover:bg-white/5 hover:border-ink/20 dark:hover:border-white/20 transition-colors;
+  }
+  .card {
+    @apply relative border border-rule dark:border-rule-dark rounded-2xl bg-white/70 dark:bg-white/[0.03]
+           shadow-[0_1px_3px_rgba(16,24,40,0.06)] hover:shadow-[0_12px_32px_-8px_rgba(16,24,40,0.16)]
+           dark:hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.5)]
+           hover:-translate-y-0.5 transition-all duration-300;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium;
+  }
+  .glass-nav {
+    @apply backdrop-blur-md bg-white/70 dark:bg-black/40 border-b border-rule/70 dark:border-rule-dark/70;
+  }
+  .hero-glow {
+    background:
+      radial-gradient(700px 380px at 10% -15%, rgba(79,70,229,0.20), transparent 60%),
+      radial-gradient(600px 320px at 90% -10%, rgba(196,52,43,0.14), transparent 60%),
+      radial-gradient(500px 300px at 50% 110%, rgba(124,58,237,0.10), transparent 60%);
+  }
+  .grid-texture {
+    background-image:
+      linear-gradient(rgba(20,25,42,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20,25,42,0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .dot-texture {
+    background-color: rgba(20,25,42,0.025);
+    background-image: radial-gradient(rgba(20,25,42,0.09) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .hero-glow {
+    background:
+      radial-gradient(700px 380px at 10% -15%, rgba(99,102,241,0.22), transparent 60%),
+      radial-gradient(600px 320px at 90% -10%, rgba(196,52,43,0.16), transparent 60%),
+      radial-gradient(500px 300px at 50% 110%, rgba(124,58,237,0.14), transparent 60%);
+  }
+  .grid-texture {
+    background-image:
+      linear-gradient(rgba(228,231,236,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(228,231,236,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .dot-texture {
+    background-color: rgba(0,0,0,0.15);
+    background-image: radial-gradient(rgba(228,231,236,0.10) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid #C4342B;
+  outline-offset: 2px;
+}
