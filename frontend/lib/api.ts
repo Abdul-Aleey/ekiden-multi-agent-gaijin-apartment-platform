@@ -1,9 +1,12 @@
 import type { ApplicantProfile, InquiryEmail, SearchPreferences } from "./types";
 
-// `??` (not `||`) deliberately: an explicitly-empty NEXT_PUBLIC_API_URL means
-// "same origin, use relative paths" (the single-Cloud-Run-service deploy
-// shape) and must NOT fall back to the localhost default.
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// Defaults to "" (relative "/api/..." calls, same origin) whenever
+// NEXT_PUBLIC_API_URL isn't set — the standalone Cloud Run deploy shape,
+// where this one service serves both the frontend and the API. Local dev
+// sets NEXT_PUBLIC_API_URL explicitly in frontend/.env.local to point at the
+// separate backend dev server instead; there is no hardcoded localhost
+// fallback baked into the built app itself.
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export interface SSEEvent {
   event: string;
