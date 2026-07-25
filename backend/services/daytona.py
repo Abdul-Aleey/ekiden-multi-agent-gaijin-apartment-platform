@@ -25,25 +25,27 @@ logger = logging.getLogger(__name__)
 _DAYTONA_PROXY_BASE_URL = "https://proxy.app.daytona.io"
 _SANDBOX_TIMEOUT_S = 20.0
 
+LEASE_MONTHS = 24  # standard Japanese lease term, used to amortize one-time move-in fees
+
 COST_MODEL_TEMPLATE = """
 import json
 
 def compute_cost(rent_jpy, kanrihi_jpy, shikikin_jpy, reikin_jpy, chukai_jpy,
-                  hoshou_initial_jpy, hoshou_annual_jpy, kasai_hoken_jpy,
-                  kagi_koukan_jpy, koushinryou_jpy):
-    upfront = (shikikin_jpy + reikin_jpy + chukai_jpy + hoshou_initial_jpy
-               + kasai_hoken_jpy + kagi_koukan_jpy + rent_jpy + kanrihi_jpy)
-    two_year_total = (upfront + (rent_jpy + kanrihi_jpy) * 23
-                       + hoshou_annual_jpy * 2 + koushinryou_jpy)
-    effective_monthly = two_year_total / 24
+                  hoshou_initial_jpy, kasai_hoken_jpy, kagi_koukan_jpy):
+    LEASE_MONTHS = 24
+    upfront_total = (rent_jpy + kanrihi_jpy + shikikin_jpy + reikin_jpy + chukai_jpy
+                      + hoshou_initial_jpy + kasai_hoken_jpy + kagi_koukan_jpy)
+    amortized = (round(shikikin_jpy / LEASE_MONTHS) + round(reikin_jpy / LEASE_MONTHS)
+                 + round(chukai_jpy / LEASE_MONTHS) + round(hoshou_initial_jpy / LEASE_MONTHS)
+                 + round(kasai_hoken_jpy / LEASE_MONTHS) + round(kagi_koukan_jpy / LEASE_MONTHS))
+    effective_monthly = rent_jpy + kanrihi_jpy + amortized
     return {{
-        "upfront_total_jpy": round(upfront),
+        "upfront_total_jpy": round(upfront_total),
         "effective_monthly_jpy": round(effective_monthly),
     }}
 
 result = compute_cost({rent_jpy}, {kanrihi_jpy}, {shikikin_jpy}, {reikin_jpy},
-                       {chukai_jpy}, {hoshou_initial_jpy}, {hoshou_annual_jpy},
-                       {kasai_hoken_jpy}, {kagi_koukan_jpy}, {koushinryou_jpy})
+                       {chukai_jpy}, {hoshou_initial_jpy}, {kasai_hoken_jpy}, {kagi_koukan_jpy})
 print(json.dumps(result))
 """
 
@@ -101,24 +103,26 @@ async def _call_sandbox(code: str) -> dict:
 
 
 def compute_locally(**kwargs: int) -> dict:
-    upfront = (
-        kwargs["shikikin_jpy"] + kwargs["reikin_jpy"] + kwargs["chukai_jpy"]
-        + kwargs["hoshou_initial_jpy"] + kwargs["kasai_hoken_jpy"] + kwargs["kagi_koukan_jpy"]
-        + kwargs["rent_jpy"] + kwargs["kanrihi_jpy"]
+    upfront_total = (
+        kwargs["rent_jpy"] + kwargs["kanrihi_jpy"] + kwargs["shikikin_jpy"] + kwargs["reikin_jpy"]
+        + kwargs["chukai_jpy"] + kwargs["hoshou_initial_jpy"] + kwargs["kasai_hoken_jpy"] + kwargs["kagi_koukan_jpy"]
     )
-    two_year_total = (
-        upfront + (kwargs["rent_jpy"] + kwargs["kanrihi_jpy"]) * 23
-        + kwargs["hoshou_annual_jpy"] * 2 + kwargs["koushinryou_jpy"]
+    amortized = (
+        round(kwargs["shikikin_jpy"] / LEASE_MONTHS) + round(kwargs["reikin_jpy"] / LEASE_MONTHS)
+        + round(kwargs["chukai_jpy"] / LEASE_MONTHS) + round(kwargs["hoshou_initial_jpy"] / LEASE_MONTHS)
+        + round(kwargs["kasai_hoken_jpy"] / LEASE_MONTHS) + round(kwargs["kagi_koukan_jpy"] / LEASE_MONTHS)
     )
     return {
-        "upfront_total_jpy": round(upfront),
-        "effective_monthly_jpy": round(two_year_total / 24),
+        "upfront_total_jpy": round(upfront_total),
+        "effective_monthly_jpy": round(kwargs["rent_jpy"] + kwargs["kanrihi_jpy"] + amortized),
     }
 
 
 async def run_cost_model(**kwargs: int) -> tuple[dict, bool]:
-    """Returns (result_dict, ran_in_sandbox). Tries Daytona first; on any
-    failure, computes locally and reports that via the bool."""
+    """Returns (result_dict, ran_in_sandbox) with upfront_total_jpy and
+    effective_monthly_jpy — NOT renewal fees (hoshou_annual/koushinryou), which
+    agents/cost.py shows separately rather than folding into either total. Tries
+    Daytona first; on any failure, computes locally and reports that via the bool."""
     if _is_configured():
         try:
             code = COST_MODEL_TEMPLATE.format(**kwargs)

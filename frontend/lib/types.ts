@@ -66,16 +66,17 @@ export interface Listing {
 export interface CostLineItem {
   label_en: string;
   amount_jpy: number;
-  frequency_en: "monthly" | "one-time" | "per year" | "at each renewal";
 }
 
 export interface CostBreakdown {
   listing_id: string;
   advertised_monthly_jpy: number;
   upfront_total_jpy: number;
+  upfront_items: CostLineItem[];
   effective_monthly_jpy: number;
+  effective_monthly_items: CostLineItem[];
+  renewal_items: CostLineItem[];
   markup_percent: number;
-  items: CostLineItem[];
   assumptions: string[];
 }
 

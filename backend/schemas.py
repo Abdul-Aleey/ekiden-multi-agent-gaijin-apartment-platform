@@ -66,16 +66,26 @@ class Listing(BaseModel):
 class CostLineItem(BaseModel):
     label_en: str
     amount_jpy: int
-    frequency_en: Literal["monthly", "one-time", "per year", "at each renewal"]
 
 
 class CostBreakdown(BaseModel):
     listing_id: str
     advertised_monthly_jpy: int
+    # Each *_items list is guaranteed (by construction in services/daytona.py) to
+    # sum exactly to its corresponding total — the three categories are mutually
+    # exclusive, not overlapping views of the same money:
+    #   upfront_items -> upfront_total_jpy: paid once, at move-in.
+    #   effective_monthly_items -> effective_monthly_jpy: ongoing monthly cost,
+    #     amortizing the upfront one-time fees over a standard 2-year lease.
+    #   renewal_items: periodic costs after move-in (guarantor renewal, lease
+    #     renewal fee) — deliberately NOT folded into either total above, shown
+    #     separately with their own real amount and real timing.
     upfront_total_jpy: int
+    upfront_items: list[CostLineItem] = []
     effective_monthly_jpy: int
+    effective_monthly_items: list[CostLineItem] = []
+    renewal_items: list[CostLineItem] = []
     markup_percent: float
-    items: list[CostLineItem] = []
     assumptions: list[str] = []
 
 

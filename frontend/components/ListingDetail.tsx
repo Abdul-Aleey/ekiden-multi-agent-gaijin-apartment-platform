@@ -23,12 +23,6 @@ export default function ListingDetail({
 }) {
   const { listing, cost, eligibility, strategy } = card;
   const { lang, t } = useLanguage();
-  const FREQ_LABEL: Record<string, string> = {
-    monthly: t("costFreqMonthly"),
-    "one-time": t("costFreqOneTime"),
-    "per year": t("costFreqPerYear"),
-    "at each renewal": t("costFreqRenewal"),
-  };
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
   const [askLoading, setAskLoading] = useState(false);
@@ -99,27 +93,59 @@ export default function ListingDetail({
             <h3 className="text-sm font-medium mb-2">{t("trueCost")}</h3>
             <div className="text-sm space-y-1 tabular-figures">
               <div>{t("advertised")}: ¥{cost.advertised_monthly_jpy.toLocaleString()}</div>
-              <div>{t("upfrontTotal")}: ¥{cost.upfront_total_jpy.toLocaleString()}</div>
               <div className="text-signal font-semibold">
                 {t("effectiveMonthly")}: ¥{cost.effective_monthly_jpy.toLocaleString()} (+
                 {cost.markup_percent.toFixed(0)}%)
               </div>
             </div>
 
-            {cost.items.length > 0 && (
+            {cost.upfront_items.length > 0 && (
               <div className="mt-4">
-                <h4 className="text-xs font-medium mb-1">{t("costBreakdownTitle")}</h4>
-                <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("costBreakdownIntro")}</p>
+                <h4 className="text-xs font-medium mb-1">{t("upfrontBreakdownTitle")}</h4>
+                <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("upfrontBreakdownIntro")}</p>
                 <ul className="text-xs divide-y divide-rule dark:divide-rule-dark">
-                  {cost.items.map((item, i) => (
+                  {cost.upfront_items.map((item, i) => (
                     <li key={i} className="flex items-center justify-between py-1.5 tabular-figures">
                       <span>{item.label_en}</span>
-                      <span className="flex items-center gap-2">
-                        <span className="text-ink/40 dark:text-ink-dark/40 text-[10px]">
-                          {FREQ_LABEL[item.frequency_en] ?? item.frequency_en}
-                        </span>
-                        <span className="font-medium">¥{item.amount_jpy.toLocaleString()}</span>
-                      </span>
+                      <span className="font-medium">¥{item.amount_jpy.toLocaleString()}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-center justify-between pt-1.5 text-xs font-semibold tabular-figures">
+                  <span>{t("subtotal")}</span>
+                  <span>¥{cost.upfront_total_jpy.toLocaleString()}</span>
+                </div>
+              </div>
+            )}
+
+            {cost.effective_monthly_items.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-xs font-medium mb-1">{t("monthlyBreakdownTitle")}</h4>
+                <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("monthlyBreakdownIntro")}</p>
+                <ul className="text-xs divide-y divide-rule dark:divide-rule-dark">
+                  {cost.effective_monthly_items.map((item, i) => (
+                    <li key={i} className="flex items-center justify-between py-1.5 tabular-figures">
+                      <span>{item.label_en}</span>
+                      <span className="font-medium">¥{item.amount_jpy.toLocaleString()}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-center justify-between pt-1.5 text-xs font-semibold tabular-figures">
+                  <span>{t("subtotal")}</span>
+                  <span>¥{cost.effective_monthly_jpy.toLocaleString()}</span>
+                </div>
+              </div>
+            )}
+
+            {cost.renewal_items.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-xs font-medium mb-1">{t("renewalTitle")}</h4>
+                <p className="text-[11px] text-ink/50 dark:text-ink-dark/50 mb-2">{t("renewalIntro")}</p>
+                <ul className="text-xs divide-y divide-rule dark:divide-rule-dark">
+                  {cost.renewal_items.map((item, i) => (
+                    <li key={i} className="flex items-center justify-between py-1.5 tabular-figures">
+                      <span>{item.label_en}</span>
+                      <span className="font-medium">¥{item.amount_jpy.toLocaleString()}</span>
                     </li>
                   ))}
                 </ul>

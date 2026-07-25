@@ -9,12 +9,11 @@ type ProviderStatus = "ok" | "error" | "not_configured" | "configured_untested" 
 
 const PROVIDERS: {
   label: string;
-  key: "qwen" | "aiand_fast" | "aiand_quality" | "gmi" | "daytona" | "gemini";
+  key: "qwen" | "aiand_fast" | "aiand_quality" | "daytona" | "gemini";
 }[] = [
   { label: "Qwen Cloud", key: "qwen" },
   { label: "ai& (fast)", key: "aiand_fast" },
   { label: "ai& (quality)", key: "aiand_quality" },
-  { label: "GMI Cloud", key: "gmi" },
   { label: "Daytona", key: "daytona" },
   { label: "Vertex AI Gemini", key: "gemini" },
 ];
@@ -46,7 +45,7 @@ const TITLE: Record<ProviderStatus, string> = {
 export default function NavBar() {
   const { lang, setLang } = useLanguage();
   const [status, setStatus] = useState<Record<string, ProviderStatus>>({
-    qwen: "checking", aiand_fast: "checking", aiand_quality: "checking", gmi: "checking",
+    qwen: "checking", aiand_fast: "checking", aiand_quality: "checking",
     daytona: "checking", gemini: "checking",
   });
 
@@ -60,7 +59,7 @@ export default function NavBar() {
       .catch(() => {
         if (!cancelled) {
           setStatus({
-            qwen: "error", aiand_fast: "error", aiand_quality: "error", gmi: "error",
+            qwen: "error", aiand_fast: "error", aiand_quality: "error",
             daytona: "error", gemini: "error",
           });
         }
